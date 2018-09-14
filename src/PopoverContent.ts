@@ -5,9 +5,11 @@ import {Popover} from "./Popover";
     selector: "popover-content",
     template: `
 <div #popoverDiv class="popover {{ effectivePlacement }}"
-     [style.top]="top + 'px'"
-     [style.left]="left + 'px'"
+     [style.top]="top"
+     [style.left]="left"
+     [style.bottom]="bottom"
      [class.in]="isIn"
+     [class.from-bottom]="fromBottom"
      [class.fade]="animation"
      style="display: block"
      role="popover">
@@ -76,9 +78,11 @@ export class PopoverContent implements AfterViewInit, OnDestroy {
 
     popover: Popover;
     onCloseFromOutside = new EventEmitter();
-    top: number = -10000;
-    left: number = -10000;
+    top: string;
+    left: string;
+    bottom: string;
     isIn: boolean = false;
+    fromBottom: boolean = false;
     displayType: string = "none";
     effectivePlacement: string;
 
@@ -104,6 +108,7 @@ export class PopoverContent implements AfterViewInit, OnDestroy {
     constructor(protected element: ElementRef,
                 protected cdr: ChangeDetectorRef,
                 protected renderer: Renderer) {
+        this.initPos();
     }
 
     // -------------------------------------------------------------------------
@@ -139,29 +144,34 @@ export class PopoverContent implements AfterViewInit, OnDestroy {
 
         const p = this.positionElements(this.popover.getElement(), this.popoverDiv.nativeElement, this.placement);
         this.displayType = "block";
-        this.top = p.top;
-        this.left = p.left;
+        this.top = this.getValueInPx(p.top);
+        this.bottom = this.getValueInPx(p.bottom);
+        this.left = this.getValueInPx(p.left);
         this.isIn = true;
+        this.fromBottom = this.bottom !== "unset";
     }
 
     hide(): void {
-        this.top = -10000;
-        this.left = -10000;
+        this.initPos();
         this.isIn = true;
         this.popover.hide();
     }
 
     hideFromPopover() {
-        this.top = -10000;
-        this.left = -10000;
+        this.initPos();
         this.isIn = true;
+    }
+
+    onResized(event: any) {
+        console.log(event);
+        this.show();
     }
 
     // -------------------------------------------------------------------------
     // Protected Methods
     // -------------------------------------------------------------------------
 
-    protected positionElements(hostEl: HTMLElement, targetEl: HTMLElement, positionStr: string, appendToBody: boolean = false): { top: number, left: number } {
+    protected positionElements(hostEl: HTMLElement, targetEl: HTMLElement, positionStr: string, appendToBody: boolean = false): { top: number, left: number, bottom?: number } {
         let positionStrParts = positionStr.split("-");
         let pos0 = positionStrParts[0];
         let pos1 = positionStrParts[1] || "center";
@@ -170,6 +180,7 @@ export class PopoverContent implements AfterViewInit, OnDestroy {
         let targetElHeight = targetEl.offsetHeight;
 
         this.effectivePlacement = pos0 = this.getEffectivePlacement(pos0, hostEl, targetEl);
+        let parentEl = appendToBody ? window.document : this.parentOffsetEl(hostEl);
 
         let shiftWidth: any = {
             center: function (): number {
@@ -195,7 +206,7 @@ export class PopoverContent implements AfterViewInit, OnDestroy {
             }
         };
 
-        let targetElPos: { top: number, left: number };
+        let targetElPos: { top: number, left: number, bottom?: number };
         switch (pos0) {
             case "right":
                 targetElPos = {
@@ -224,6 +235,11 @@ export class PopoverContent implements AfterViewInit, OnDestroy {
                     left: shiftWidth[pos1]()
                 };
                 break;
+        }
+
+        if (hostElPos.top + targetElHeight > parentEl.offsetHeight) {
+            targetElPos.top = undefined;
+            targetElPos.bottom = parentEl.offsetHeight - (hostElPos.top + hostElPos.height);
         }
 
         return targetElPos;
@@ -305,5 +321,15 @@ export class PopoverContent implements AfterViewInit, OnDestroy {
         }
 
         return desiredPlacement;
+    }
+
+    protected getValueInPx(value: number): string {
+        return value === undefined ? "unset" : value + "px";
+    }
+
+    protected initPos(): void {
+        this.top = this.getValueInPx(-10000);
+        this.left = this.getValueInPx(-10000);
+        this.bottom = this.getValueInPx(undefined);
     }
 }

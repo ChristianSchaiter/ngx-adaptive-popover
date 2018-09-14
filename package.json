@@ -1,26 +1,26 @@
 {
   "name": "ngx-popover",
-  "version": "0.0.16",
-  "description": "Simple popover control for your angular2 applications using bootstrap3.",
+  "version": "0.0.1",
+  "description": "Simple adaptive popover control for angular apps, based on ngx-popover.",
   "license": "MIT",
   "readmeFilename": "README.md",
   "private": true,
   "author": {
-    "name": "Umed Khudoiberdiev",
-    "email": "pleerock.me@gmail.com"
+    "name": "Christian Schaiter",
+    "email": "christian.schaiter@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pleerock/ngx-popover.git"
+    "url": "https://github.com/ChristianSchaiter/ngx-adaptive-popover.git"
   },
   "bugs": {
-    "url": "https://github.com/pleerock/ngx-popover/issues"
+    "url": "https://github.com/ChristianSchaiter/ngx-adaptive-popover/issues"
   },
   "tags": [
     "popover",
-    "angular2",
+    "angular",
     "typescript",
-    "angular2-popover"
+    "angular-popover"
   ],
   "peerDependencies": {
     "@angular/core": "^2.0.0"
@@ -33,23 +33,22 @@
     "@angular/forms": "^2.4.3",
     "@angular/platform-browser": "^2.4.3",
     "@angular/platform-browser-dynamic": "^2.4.3",
-
     "@types/node": "^7.0.0",
     "bootstrap": "^3.3.7",
     "chai": "^3.4.1",
     "del": "^2.2.2",
     "es6-shim": "^0.35.2",
-    "gulp": "^3.9.0",
+    "gulp": "^4.0.0",
     "gulp-file": "^0.3.0",
-    "gulp-mocha": "^3.0.1",
+    "gulp-mocha": "^6.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
     "gulp-shell": "^0.5.1",
     "gulp-tslint": "^7.0.1",
     "gulp-typescript": "^3.1.4",
     "gulp-uglify": "^2.0.0",
-    "gulpclass": "^0.1.1",
-    "mocha": "^3.2.0",
+    "gulpclass": "^0.2.0",
+    "mocha": "^5.2.0",
     "reflect-metadata": "0.1.9",
     "rxjs": "^5.0.3",
     "sinon": "^1.17.7",
